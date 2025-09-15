@@ -16,7 +16,7 @@ def mobile_management():
         "platformVersion": "9.0",
         "deviceName": "Google Pixel 3",
 
-        "app": "bs://sample.app",
+        "app": os.getenv("BS_APP_PATH"),
 
         'bstack:options': {
             "projectName": "First Python project",
@@ -28,15 +28,17 @@ def mobile_management():
         }
     })
 
-    browser.config._wait_decorator = support._logging.wait_with(context=allure_commons._allure.StepContext)
+    browser.config._wait_decorator = support._logging.wait_with(
+        context=allure_commons._allure.StepContext
+    )
 
     browser.config.driver = webdriver.Remote(
-        command_executor="http://hub.browserstack.com/wd/hub",
+        command_executor=os.getenv("BS_EXECUTOR"),
         options=options
     )
 
     browser.config.timeout = float(
-        os.getenv('timeout', '10.0')
+        os.getenv('TIMEOUT', '10.0')
     )
 
     yield
