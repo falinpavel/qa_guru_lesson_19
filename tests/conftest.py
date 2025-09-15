@@ -1,17 +1,15 @@
+import allure_commons
 import pytest
 import os
 
 from appium.options.android import UiAutomator2Options
-from selene import browser
+from selene import browser, support
 from dotenv import load_dotenv
 from selenium import webdriver
 
 load_dotenv()
 
-@pytest.fixture(
-    scope='function',
-    autouse=True
-)
+@pytest.fixture(scope='function', autouse=True)
 def mobile_management():
     options = UiAutomator2Options().load_capabilities({
         "platformName": "android",
@@ -29,6 +27,8 @@ def mobile_management():
             "accessKey": os.getenv("BS_PASSWORD"),
         }
     })
+
+    browser.config._wait_decorator = support._logging.wait_with(context=allure_commons._allure.StepContext)
 
     browser.config.driver = webdriver.Remote(
         command_executor="http://hub.browserstack.com/wd/hub",
