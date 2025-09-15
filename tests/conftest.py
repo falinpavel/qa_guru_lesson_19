@@ -1,3 +1,4 @@
+import allure
 import allure_commons
 import pytest
 import os
@@ -19,9 +20,9 @@ def mobile_management():
         "app": os.getenv("BS_APP_PATH"),
 
         'bstack:options': {
-            "projectName": "First Python project",
+            "projectName": "wiki",
             "buildName": "browserstack-build-1",
-            "sessionName": "BStack first_test",
+            "sessionName": "session",
 
             "userName": os.getenv("BS_LOGIN"),
             "accessKey": os.getenv("BS_PASSWORD"),
@@ -42,5 +43,17 @@ def mobile_management():
     )
 
     yield
+
+    allure.attach(
+        browser.driver.get_screenshot_as_png(),
+        name='screenshot',
+        attachment_type=allure.attachment_type.PNG,
+    )
+
+    allure.attach(
+        browser.driver.page_source,
+        name='screen xml dump',
+        attachment_type=allure.attachment_type.XML,
+    )
 
     browser.quit()
