@@ -3,36 +3,34 @@ import allure
 import allure_commons
 import os
 
+from appium import webdriver as appium_webdriver
 from appium.options.android import UiAutomator2Options
 from dotenv import load_dotenv
 from selene import browser, support
-from selenium import webdriver
-
-import const
 
 load_dotenv()
 
 @pytest.fixture(scope='function', autouse=True)
 def mobile_management():
-
-    appium_options = UiAutomator2Options().load_capabilities({
-        "appium:app": f"{const.APPLICATION_DIR}/app-alpha-universal-release.apk",
-        "appium:appWaitActivity": "org.wikipedia.*"
-    })
+    options = UiAutomator2Options()
+    options.platform_name = "Android"
+    options.automation_name = "UiAutomator2"
+    options.app = "/Users/innafalina/PycharmProjects/qa_guru_lesson_19/resources/application/app-alpha-universal-release.apk"
+    options.app_wait_activity = "org.wikipedia.*"
+    options.new_command_timeout = 300
+    options.connect_hardware_keyboard = True
 
     browser.config._wait_decorator = support._logging.wait_with(
         context=allure_commons._allure.StepContext
     )
 
     with allure.step('init app session'):
-        browser.config.driver = webdriver.Remote(
-            command_executor=os.getenv("BS_EXECUTOR"),
-            options=appium_options
+        browser.config.driver = appium_webdriver.Remote(
+            command_executor="http://127.0.0.1:4723",
+            options=options
         )
 
-    browser.config.timeout = float(
-        os.getenv('TIMEOUT', '10.0')
-    )
+    browser.config.timeout = float(os.getenv('TIMEOUT', '10.0'))
 
     yield
 
