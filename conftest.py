@@ -8,6 +8,8 @@ from appium.options.android import UiAutomator2Options
 from dotenv import load_dotenv
 from selene import browser, support
 
+import const
+
 load_dotenv()
 
 @pytest.fixture(scope='function', autouse=True)
@@ -15,7 +17,7 @@ def mobile_management():
     options = UiAutomator2Options()
     options.platform_name = "Android"
     options.automation_name = "UiAutomator2"
-    options.app = "/Users/innafalina/PycharmProjects/qa_guru_lesson_19/resources/application/app-alpha-universal-release.apk"
+    options.app = const.APPLICATION_FILE
     options.app_wait_activity = "org.wikipedia.*"
     options.new_command_timeout = 300
     options.connect_hardware_keyboard = True
