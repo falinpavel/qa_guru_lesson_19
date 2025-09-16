@@ -8,20 +8,15 @@ from dotenv import load_dotenv
 from selene import browser, support
 from selenium import webdriver
 
+import const
+
 load_dotenv()
 
-def pytest_addoption(parser):
-    parser.addoption(
-        "--platform", action="store", default="android",
-        help="Mobile platform: android or ios"
-    )
-
 @pytest.fixture(scope='function', autouse=True)
-def mobile_management(request):
+def mobile_management():
 
     appium_options = UiAutomator2Options().load_capabilities({
-        "appiumv2": True,
-        "appium:app": os.getenv("BS_APP_PATH"),
+        "appium:app": f"{const.APPLICATION_DIR}/app-alpha-universal-release.apk",
         "appium:appWaitActivity": "org.wikipedia.*"
     })
 
@@ -31,7 +26,7 @@ def mobile_management(request):
 
     with allure.step('init app session'):
         browser.config.driver = webdriver.Remote(
-            os.getenv("BS_EXECUTOR"),
+            command_executor=os.getenv("BS_EXECUTOR"),
             options=appium_options
         )
 
