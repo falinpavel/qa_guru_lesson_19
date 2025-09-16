@@ -5,10 +5,7 @@ from appium.webdriver.common.appiumby import AppiumBy
 from selene import browser, have
 
 
-@pytest.mark.parametrize(
-    "to_search",
-    ["Appium"]
-)
+@pytest.mark.parametrize("to_search", ["Appium"])
 def test_search_and_check_result_list(to_search):
     with step(f'Tap on search field and type request: {to_search}'):
         browser.element((AppiumBy.ACCESSIBILITY_ID, "Search Wikipedia")).click()
@@ -19,10 +16,7 @@ def test_search_and_check_result_list(to_search):
         results.first.should(have.text(to_search))
 
 
-@pytest.mark.parametrize(
-    "to_search",
-    ["Bilbo Baggins", "Frodo Baggins"]
-)
+@pytest.mark.parametrize("to_search", ["Bilbo Baggins", "Frodo Baggins"])
 def test_search_and_go_to_article_page(to_search):
     with step(f'Tap on search field and type request: {to_search}'):
         browser.element((AppiumBy.ACCESSIBILITY_ID, "Search Wikipedia")).click()
