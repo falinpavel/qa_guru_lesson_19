@@ -1,34 +1,13 @@
-import allure
 import pytest
 
-from allure_commons._allure import step
-from appium.webdriver.common.appiumby import AppiumBy
-from selene import browser, have
-
-import const
+from helpers.application_manager.application_manager import wiki_app
 
 
-@pytest.mark.parametrize("to_search", ["Appium"])
-def test_search_and_check_result_list(to_search):
-    with allure.step("Skip welcome page"):
-        browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/fragment_onboarding_skip_button")).click()
-    with step(f'Tap on search field and type request: {to_search}'):
-        browser.element((AppiumBy.ACCESSIBILITY_ID, "Search Wikipedia")).click()
-        browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")).type(to_search)
-    with step(f'Verify content found, check that {to_search} is present'):
-        results = browser.all((AppiumBy.ID, 'org.wikipedia.alpha:id/page_list_item_title'))
-        results.should(have.size_greater_than(0))
-        results.first.should(have.text(to_search))
-
-
-@pytest.mark.parametrize("to_search", ["Bilbo Baggins", "Frodo Baggins"])
-def test_search_and_go_to_article_page(to_search):
-    with allure.step("Skip welcome page"):
-        browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/fragment_onboarding_skip_button")).click()
-    with step(f'Tap on search field and type request: {to_search}'):
-        browser.element((AppiumBy.ACCESSIBILITY_ID, "Search Wikipedia")).click()
-        browser.element((AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")).type(to_search)
-    with step(f'Check that {to_search} is present and go to article page'):
-        results = browser.all((AppiumBy.ID, 'org.wikipedia.alpha:id/page_list_item_title'))
-    with step(f'Verify content found, check that {to_search} is present and go to article page'):
-        results.first.should(have.text(to_search)).click()
+class TestSearchWikipediaApplication:
+    @pytest.mark.parametrize('search_text', ["Appium", "Bilbo Baggins", "Frodo Baggins"])
+    def test_search_wikipedia_application(self, search_text):
+        wiki_app.home_page \
+            .click_next_button_on_welcome_screen() \
+            .click_search_button_on_wikipedia_home_page() \
+            .type_search_text_and_check_him_is_present(search_text=search_text) \
+            .click_first_article()
