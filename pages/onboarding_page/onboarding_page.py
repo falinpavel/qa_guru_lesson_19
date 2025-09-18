@@ -1,5 +1,4 @@
-from selene import browser, have, be
-from selene.core.condition import Condition as EC
+from selene import browser
 from appium.webdriver.common.appiumby import AppiumBy
 from allure import step
 

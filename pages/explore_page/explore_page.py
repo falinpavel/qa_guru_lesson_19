@@ -1,6 +1,7 @@
 from selene import browser, have
 from appium.webdriver.common.appiumby import AppiumBy
-from allure import step
+from allure_commons._allure import step
+
 
 
 class ExplorePage:

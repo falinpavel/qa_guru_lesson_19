@@ -1,5 +1,4 @@
 import pytest
-import allure
 import allure_commons
 import os
 
@@ -10,8 +9,10 @@ from dotenv import load_dotenv
 from selene import browser, support
 
 from const import APK_FILE_PATH
+from utils import allure_attachments
 
 load_dotenv()
+
 
 @pytest.fixture(scope='function', autouse=True)
 def mobile_management():
@@ -27,7 +28,7 @@ def mobile_management():
         context=allure_commons._allure.StepContext
     )
 
-    with step('init app session'):
+    with step('init application session'):
         browser.config.driver = appium_webdriver.Remote(
             command_executor=os.getenv("EXECUTOR"),
             options=options
@@ -37,16 +38,12 @@ def mobile_management():
 
     yield
 
-    allure.attach(
-        browser.driver.get_screenshot_as_png(),
-        name='screenshot',
-        attachment_type=allure.attachment_type.PNG,
-    )
+    allure_attachments.attach_screenshot()
+    allure_attachments.attach_xml_dump()
 
-    allure.attach(
-        browser.driver.page_source,
-        name='screen xml dump',
-        attachment_type=allure.attachment_type.XML,
-    )
+    session_id = browser.driver.session_id
 
-    browser.quit()
+    with step('close application session'):
+        browser.quit()
+
+    allure_attachments.attach_bstack_video(session_id)
