@@ -1,32 +1,23 @@
-import allure
-
 from selene import browser, have
 from appium.webdriver.common.appiumby import AppiumBy
 from allure import step
 
 
-class HomePage:
+class ExplorePage:
     def __init__(self):
-        self.skip_buttom = (AppiumBy.ID, "org.wikipedia.alpha:id/fragment_onboarding_skip_button")
         self.search_field_button = (AppiumBy.ACCESSIBILITY_ID, "Search Wikipedia")
         self.search_src_field = (AppiumBy.ID, "org.wikipedia.alpha:id/search_src_text")
         self.list_all_results = (AppiumBy.ID, 'org.wikipedia.alpha:id/page_list_item_title')
 
-    @step('Tap to next button in welcome screen')
-    def click_next_button_on_welcome_screen(self):
-        with allure.step('Click on the next button on the welcome screen and go to home page'):
-            browser.element(self.skip_buttom).click()
-        return self
-
     @step('Tap to search button on wikipedia home page')
     def click_search_button_on_wikipedia_home_page(self):
-        with allure.step('Click on the search button on the wikipedia home page'):
+        with step('Click on the search button on the wikipedia home page'):
             browser.element(self.search_field_button).click()
         return self
 
     @step('Tap fie')
-    def type_search_text_and_check_him_is_present(self, search_text):
-        with allure.step(f'Typing {search_text} in search field'):
+    def type_search_text_and_check_result(self, search_text):
+        with step(f'Typing {search_text} in search field'):
             browser.element(self.search_src_field).type(search_text)
             results = browser.all(self.list_all_results)
             results.should(have.size_greater_than(0))
@@ -35,7 +26,7 @@ class HomePage:
 
     @step('Click on article on result list')
     def click_first_article(self):
-        with allure.step('Click on article on result list'):
+        with step('Click on article on result list'):
             results = browser.all(self.list_all_results)
             results.first.click()
         return self
