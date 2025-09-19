@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 from const import APK_FILE_PATH
 
 
+def platform_managment(context_platform):
+    pass
+
 def options_management(context):
     options = UiAutomator2Options()
 
