@@ -2,6 +2,7 @@ import os
 import pytest
 
 from appium.options.android import UiAutomator2Options
+from dotenv import load_dotenv
 
 from const import APK_FILE_PATH
 
@@ -23,11 +24,17 @@ def options_management(context):
         pytest.mark.xfail(reason="Real devices not supported")
 
     if context == 'bstack_device':
-        # TODO! dont work`t
-        pytest.mark.xfail(reason="bstack does not support")
-        options.set_capability(
-            name="EXECUTABLE_PATH",
-            value=os.getenv("EXECUTABLE_PATH")
-        )
+        options.platform_name = "Android"
+        options.device_name = "Google Pixel 3"
+        options.app = os.getenv("BS_APP_PATH")
+        options.set_capability(name="EXECUTABLE_PATH", value=os.getenv("EXECUTABLE_PATH"))
+        options.set_capability(name="bstack:options", value={
+            "projectName": "First Python project", # Название проекта которое будет отображаться в Browserstack
+            "buildName": "browserstack-build-1", # Название сборки которое будет отображаться в Browserstack
+            "sessionName": "BStack first_test", # Название сессии которое будет отображаться в Browserstack
+            # Set your access credentials
+            "userName": os.getenv("BS_LOGIN"), # Ваш логин в Browserstack
+            "accessKey": os.getenv("BS_PASSWORD") # Ваш ключ доступа в Browserstack
+        })
 
     return options

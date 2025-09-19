@@ -54,4 +54,5 @@ def mobile_management(context):
 
     with step('close application session'):
         browser.quit()
+
     allure_attachments.attach_bstack_video(session_id) if context == "bstack_device" else None
