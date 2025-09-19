@@ -4,25 +4,34 @@ import os
 
 from allure_commons._allure import step
 from appium import webdriver as appium_webdriver
-from appium.options.android import UiAutomator2Options
 from dotenv import load_dotenv
 from selene import browser, support
 
-from const import APK_FILE_PATH
+from config import options_management
 from utils import allure_attachments
 
-load_dotenv()
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--context",
+        default="bstack_device",
+        choices=["bstack_device", "connected_device", "emulator_device"],
+        help="Choose device"
+    )
+
+def pytest_configure(config):
+    context = config.getoption("--context")
+    env_file_path = f"env/.env.{context}"
+
+    load_dotenv(dotenv_path=env_file_path)
+
+@pytest.fixture
+def context(request):
+    return request.config.getoption("--context")
 
 @pytest.fixture(scope='function', autouse=True)
-def mobile_management():
-    options = UiAutomator2Options()
-    options.platform_name = "Android"
-    options.automation_name = "UiAutomator2"
-    options.app = APK_FILE_PATH
-    options.app_wait_activity = "org.wikipedia.*"
-    options.new_command_timeout = 300
-    options.connect_hardware_keyboard = True
+def mobile_management(context):
+    appium_options = options_management(context=context)
 
     browser.config._wait_decorator = support._logging.wait_with(
         context=allure_commons._allure.StepContext
@@ -30,8 +39,8 @@ def mobile_management():
 
     with step('init application session'):
         browser.config.driver = appium_webdriver.Remote(
-            command_executor=os.getenv("EXECUTOR"),
-            options=options
+            command_executor=appium_options.get_capability(name="EXECUTABLE_PATH"),
+            options=appium_options
         )
 
     browser.config.timeout = float(os.getenv('TIMEOUT', '10.0'))
@@ -45,5 +54,4 @@ def mobile_management():
 
     with step('close application session'):
         browser.quit()
-
-    allure_attachments.attach_bstack_video(session_id)
+    allure_attachments.attach_bstack_video(session_id) if context == "bstack_device" else None
