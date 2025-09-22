@@ -3,7 +3,6 @@ from appium.webdriver.common.appiumby import AppiumBy
 from allure_commons._allure import step
 
 
-
 class ExplorePage:
     def __init__(self):
         self.search_field_button = (AppiumBy.ACCESSIBILITY_ID, "Search Wikipedia")

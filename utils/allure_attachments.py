@@ -26,12 +26,14 @@ def attach_bstack_video(session_id):
         attachment_type=allure.attachment_type.HTML,
     )
 
+
 def attach_screenshot():
     allure.attach(
         browser.driver.get_screenshot_as_png(),
         name='screenshot',
         attachment_type=allure.attachment_type.PNG,
     )
+
 
 def attach_xml_dump():
     allure.attach(
