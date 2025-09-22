@@ -27,3 +27,4 @@ class OnboardingPage:
             for _ in range(3):
                 browser.element(self.continue_button).click()
             browser.element(self.get_started_button).click()
+        return self

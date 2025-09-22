@@ -9,4 +9,5 @@ class AndroidApplicationManager:
         self.onboarding_page = OnboardingPage()
         self.navigation_bar = NavigationBar()
 
+
 wiki_app = AndroidApplicationManager()
