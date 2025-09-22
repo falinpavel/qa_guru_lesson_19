@@ -1,4 +1,4 @@
-from selene import browser, be
+from selene import browser, be, have
 from selene.core.condition import Condition as EC
 from appium.webdriver.common.appiumby import AppiumBy
 from allure_commons._allure import step
@@ -21,6 +21,10 @@ class NavigationBar:
         self.edits_nav_button = (
             AppiumBy.XPATH,
             "(//android.widget.ImageView[@resource-id='org.wikipedia.alpha:id/navigation_bar_item_icon_view'])[4]"
+        )
+        self.edits_nav_text = (
+            AppiumBy.XPATH,
+            "(//android.widget.TextView[@resource-id='org.wikipedia.alpha:id/navigation_bar_item_title_view'])[4]"
         )
         self.more_nav_button = (
             AppiumBy.XPATH,
@@ -57,10 +61,11 @@ class NavigationBar:
     @step("Tap navigation bar button 'Edits'")
     def tap_to_edits(self):
         with step("Click on the 'Edits' button and check is oppened"):
-            browser.element(self.edits_nav_button).click()
-            browser.element((AppiumBy.ACCESSIBILITY_ID, "Edits")).should(
-                EC.by_and(be.visible)
-            )
+            try:
+                browser.element(self.edits_nav_button).click()
+                browser.element((AppiumBy.ACCESSIBILITY_ID, "Edits")).should(EC.by_and(be.visible))
+            except Exception as e:
+                raise Exception(f"Error: {e}")
         return self
 
     @step("Tap navigation bar button 'More")
