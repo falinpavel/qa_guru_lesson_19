@@ -19,15 +19,18 @@ def pytest_addoption(parser):
         help="Choose device"
     )
 
+
 def pytest_configure(config):
     context = config.getoption("--context")
     env_file_path = f"env/.env.{context}"
 
     load_dotenv(dotenv_path=env_file_path)
 
+
 @pytest.fixture
 def context(request):
     return request.config.getoption("--context")
+
 
 @pytest.fixture(scope='function', autouse=True)
 def mobile_management(context):
